@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-neutral text-gray-900;
+    @apply overflow-hidden; /* Prevent double scrollbars */
+  }
+
+  h1 {
+    @apply text-2xl font-semibold;
+  }
+
+  h2 {
+    @apply text-xl font-semibold;
+  }
+
+  h3 {
+    @apply text-lg font-medium;
+  }
+}
+
+@layer components {
+  .form-page {
+    @apply flex flex-col min-h-[600px];
+  }
+
+  .form-section {
+    @apply p-6 border-b last:border-b-0;
+  }
+
+  .form-title {
+    @apply text-2xl font-semibold text-center;
+  }
+
+  .form-subtitle {
+    @apply text-gray-600 text-center mt-2;
+  }
+
+  .toggle-switch {
+    @apply w-12 h-6 rounded-full p-1 transition-colors duration-200;
+  }
+
+  .toggle-switch-dot {
+    @apply w-4 h-4 rounded-full bg-white transition-transform duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-2.5 rounded-lg hover:bg-opacity-90 transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-700 px-6 py-2.5 rounded-lg hover:bg-gray-200 transition-colors;
+  }
+}
