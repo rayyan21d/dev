@@ -13,6 +13,7 @@ const steps = [
 const Header: React.FC = () => {
   const location = useLocation();
   
+  // Optimize this
   const isCompleted = (path: string) => {
     const currentIndex = steps.findIndex(step => step.path === location.pathname);
     const stepIndex = steps.findIndex(step => step.path === path);
@@ -21,6 +22,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b">
+      {/* Add in flex grow */}
       <div className="flex items-center h-16">
         <div className="flex items-center px-4 border-r h-full">
           <span className="text-xl font-semibold text-gray-900">
@@ -55,7 +57,9 @@ const Header: React.FC = () => {
           })}
         </div>
         <div className="flex items-center px-4 border-l h-full">
-          <button className="text-gray-700 hover:text-gray-900">
+          <button 
+            className="text-gray-700 hover:text-gray-900"
+          >
             Share Preview
           </button>
         </div>
