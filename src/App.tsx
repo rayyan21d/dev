@@ -1,44 +1,29 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Stepper from './components/Stepper';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { FormProvider } from './context/FormContext';
+import AppLayout from './components/common/AppLayout';
 import GeneralForm from './components/GeneralForm';
 import DesignForm from './components/DesignForm';
 import DisplaySettingsForm from './components/DisplaySettingsForm';
 import TargetingForm from './components/TargetingForm';
 import FinalSetupForm from './components/FinalSetupForm';
-import { FormProvider } from './context/FormContext';
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <BrowserRouter>
       <FormProvider>
-        <div className="min-h-screen flex flex-col bg-neutral fixed inset-0">
-          <Header />
-          <main className="flex-grow overflow-auto">
-            <Routes>
-              <Route path="/signup" element={<Navigate to="/signup/general" replace />} />
-              <Route
-                path="/signup/*"
-                element={
-                  <div className="max-w-4xl mx-auto my-8 bg-white rounded-lg shadow-sm">
-                    <Routes>
-                      <Route path="general" element={<GeneralForm />} />
-                      <Route path="design" element={<DesignForm />} />
-                      <Route path="display" element={<DisplaySettingsForm />} />
-                      <Route path="targeting" element={<TargetingForm />} />
-                      <Route path="final" element={<FinalSetupForm />} />
-                    </Routes>
-                  </div>
-                }
-              />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <AppLayout>
+          <Routes>
+            <Route path="/" element={<Navigate to="/signup/general" replace />} />
+            <Route path="/signup/general" element={<GeneralForm />} />
+            <Route path="/signup/design" element={<DesignForm />} />
+            <Route path="/signup/display" element={<DisplaySettingsForm />} />
+            <Route path="/signup/targeting" element={<TargetingForm />} />
+            <Route path="/signup/final" element={<FinalSetupForm />} />
+          </Routes>
+        </AppLayout>
       </FormProvider>
-    </Router>
+    </BrowserRouter>
   );
 };
 

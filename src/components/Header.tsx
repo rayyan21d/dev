@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BsCheck } from 'react-icons/bs';
+import { BsCheck, BsShare } from 'react-icons/bs';
 
 const steps = [
   { step: 1, name: 'General', path: '/signup/general' },
@@ -58,8 +58,9 @@ const Header: React.FC = () => {
         </div>
         <div className="flex items-center px-4 border-l h-full">
           <button 
-            className="text-gray-700 hover:text-gray-900"
+            className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
           >
+            <BsShare className="text-lg" />
             Share Preview
           </button>
         </div>
