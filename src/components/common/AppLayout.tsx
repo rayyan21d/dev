@@ -1,7 +1,12 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { BsCheck, BsShare } from 'react-icons/bs';
 import ConfirmationModal from '../modals/ConfirmationModal';
+import GeneralForm from '../GeneralForm';
+import DesignForm from '../DesignForm';
+import DisplaySettingsForm from '../DisplaySettingsForm';
+import TargetingForm from '../TargetingForm';
+import FinalSetupForm from '../FinalSetupForm';
 
 const STEPS = [
   { step: 1, name: 'General', path: '/signup/general' },
@@ -11,11 +16,7 @@ const STEPS = [
   { step: 5, name: 'Final Setup', path: '/signup/final' },
 ] as const;
 
-interface AppLayoutProps {
-  children: React.ReactNode;
-}
-
-const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
+const AppLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -30,13 +31,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   // Derived states
   const isLastStep = currentStep === STEPS.length - 1;
   const isFirstStep = currentStep === 0;
+  const shouldShowFooter = !isFirstStep; // Hide footer on first step
 
   // Update current step when location changes
   React.useEffect(() => {
     const index = STEPS.findIndex(step => step.path === location.pathname);
     if (index !== -1) {
       setCurrentStep(index);
-      // Mark previous steps as completed
       setCompletedSteps(prev => 
         Array.from(new Set([...prev, ...Array(index).fill(0).map((_, i) => i)]))
       );
@@ -44,7 +45,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   }, [location.pathname]);
 
   const handleStepClick = (index: number) => {
-    // Only allow navigation to completed steps or the next available step
     if (index <= currentStep + 1 || completedSteps.includes(index - 1)) {
       navigate(STEPS[index].path);
     }
@@ -55,8 +55,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       setShowConfirmation(true);
       return;
     }
-    
-    // Mark current step as completed
     setCompletedSteps(prev => Array.from(new Set([...prev, currentStep])));
     navigate(STEPS[currentStep + 1].path);
   };
@@ -125,42 +123,53 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
       {/* Main Content */}
       <main className="flex-1 bg-white">
-        {children}
+        <div className="max-w-[1400px] mx-auto px-8 py-10">
+          <Routes>
+            <Route path="/" element={<Navigate to="/signup/general" replace />} />
+            <Route path="/signup/general" element={<GeneralForm />} />
+            <Route path="/signup/design" element={<DesignForm />} />
+            <Route path="/signup/display" element={<DisplaySettingsForm />} />
+            <Route path="/signup/targeting" element={<TargetingForm />} />
+            <Route path="/signup/final" element={<FinalSetupForm />} />
+          </Routes>
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="sticky bottom-0 z-50 bg-[#F3F4F6] border-t">
-        <div className="max-w-[1400px] mx-auto flex justify-between items-center h-[72px] px-6">
-          <div className="flex items-center gap-6">
-            <button
-              onClick={handleBack}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
-            >
-              <span className="text-lg">←</span>
-              <span>Back</span>
-            </button>
-            {!isFirstStep && (
+      {/* Footer - Conditionally rendered */}
+      {shouldShowFooter && (
+        <footer className="sticky bottom-0 z-50 bg-[#F3F4F6] border-t">
+          <div className="max-w-[1400px] mx-auto flex justify-between items-center h-[72px] px-6">
+            <div className="flex items-center gap-6">
               <button
                 onClick={handleBack}
-                className="text-gray-600 hover:text-gray-900"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
               >
-                Previous Step
+                <span className="text-lg">←</span>
+                <span>Back</span>
               </button>
-            )}
+              {!isFirstStep && (
+                <button
+                  onClick={handleBack}
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  Previous Step
+                </button>
+              )}
+            </div>
+            
+            <button
+              onClick={handleNext}
+              className={`px-8 py-2.5 rounded-lg transition-colors ${
+                isLastStep 
+                  ? 'bg-[#10B981] hover:bg-[#059669] text-white'
+                  : 'bg-[#6366F1] hover:bg-[#4F46E5] text-white'
+              }`}
+            >
+              {isLastStep ? 'Complete' : 'Next Step'}
+            </button>
           </div>
-          
-          <button
-            onClick={handleNext}
-            className={`px-8 py-2.5 rounded-lg transition-colors ${
-              isLastStep 
-                ? 'bg-[#10B981] hover:bg-[#059669] text-white'
-                : 'bg-[#6366F1] hover:bg-[#4F46E5] text-white'
-            }`}
-          >
-            {isLastStep ? 'Complete' : 'Next Step'}
-          </button>
-        </div>
-      </footer>
+        </footer>
+      )}
 
       <ConfirmationModal 
         isOpen={showConfirmation}
